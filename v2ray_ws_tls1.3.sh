@@ -14,7 +14,7 @@ function yellow(){
 
 function check_os(){
 green "系统支持检测"
-sleep 3s
+sleep 2
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
@@ -66,24 +66,25 @@ elif [ "$release" == "ubuntu" ]; then
     red "==============="
     exit
     fi
+    green "当前系统支持"
     ufw_status=`systemctl status ufw | grep "Active: active"`
     if [ -n "$ufw_status" ]; then
-        ufw allow 80/tcp
-        ufw allow 443/tcp
+        ufw allow 80/tcp >/dev/null 2>&1
+        ufw allow 443/tcp >/dev/null 2>&1
     fi
-    apt-get update >/dev/null 2>&1
-    green "开始安装nginx编译依赖"
+    apt-get update
+    green "安装nginx编译依赖"
     apt-get install -y vim vnstat htop build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 elif [ "$release" == "debian" ]; then
-    apt-get update >/dev/null 2>&1
-    green "开始安装nginx编译依赖"
+    apt-get update
+    green "安装nginx编译依赖"
     apt-get install -y vim vnstat htop build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 fi
 }
 
 function check_env(){
 green "安装环境监测"
-sleep 3s
+sleep 2
 if [ -f "/etc/selinux/config" ]; then
     CHECK=$(grep SELINUX= /etc/selinux/config | grep -v "#")
     if [ "$CHECK" != "SELINUX=disabled" ]; then
@@ -96,9 +97,9 @@ fi
 firewall_status=`firewall-cmd --state` >/dev/null 2>&1
 if [ "$firewall_status" == "running" ]; then
     green "检测到firewalld开启状态，添加放行80/443端口规则"
-    firewall-cmd --zone=public --add-port=80/tcp --permanent
-    firewall-cmd --zone=public --add-port=443/tcp --permanent
-    firewall-cmd --reload
+    firewall-cmd --zone=public --add-port=80/tcp --permanent >/dev/null 2>&1
+    firewall-cmd --zone=public --add-port=443/tcp --permanent >/dev/null 2>&1
+    firewall-cmd --reload >/dev/null 2>&1
 fi
 $systemPackage -y install net-tools socat >/dev/null 2>&1
 Port80=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 80`
@@ -162,8 +163,8 @@ function install_nginx(){
     tar xf nginx-1.15.8.tar.gz && rm nginx-1.15.8.tar.gz >/dev/null 2>&1
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
-    green "开始编译安装nginx及常用组件，编译时间较长，通常需要5到10分钟，请耐心等待。"
-    sleep 3s
+    green "开始编译安装nginx及常用组件，编译时间较长，通常要5到10分钟，请耐心等待。"
+    sleep 2
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
 
@@ -188,6 +189,7 @@ http {
     client_max_body_size 20m;
     #gzip  on;
     include /etc/nginx/conf.d/*.conf;
+
 # 将v2ray的TLS功能剥离，用Nginx来实现TLS
 server {
     listen  443 ssl;
@@ -358,9 +360,9 @@ cat > /usr/local/etc/v2ray/qr_config.json<<-EOF
 EOF
 
 v2ray_link="vmess://$(base64 -w 0 /usr/local/etc/v2ray/qr_config.json)"
-rm -f /usr/local/etc/v2ray/qr_config.json
+# rm -f /usr/local/etc/v2ray/qr_config.json
 
-green "=============================="
+green "==============================="
 green "         安装已经完成"
 green "===========配置参数============"
 green "地址：${your_domain}"
@@ -373,8 +375,8 @@ green "别名：myws"
 green "路径：${newpath}"
 green "底层传输：tls"
 green
-green "nginx配置文件：/etc/nginx/conf/nginx.conf"
-green "v2ray配置文件：/usr/local/etc/v2ray/config.json"
+green "nginx配置路径：/etc/nginx/conf/nginx.conf"
+green "v2ray配置路径：/usr/local/etc/v2ray/config.json"
 green
 green "Qv2ray二维码链接：${v2ray_link}"
 green
@@ -387,7 +389,7 @@ function web_download() {
 web_dir="/etc/nginx/html"
   [[ ! -d "${web_dir}" ]] && mkdir "${web_dir}"
   while [[ ! -f "${web_dir}/web.zip" ]]; do
-    green "请选择下面任意一个网站:"
+    green "请选择下面任意一个网站模板:"
     green "1. https://templated.co/intensify"
     green "2. https://templated.co/binary(人物照片)"
     green "3. https://templated.co/retrospect(风景照片)"
@@ -496,7 +498,7 @@ function install_bbr() {
 	fi
 	if [[ $is_bbr ]]; then
 		echo
-		green "BBR 已经启用...无需再安装$none"
+		green "BBR 已启用，无需再安装...."
 		echo
 	elif [[ $try_enable_bbr ]]; then
 		sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
@@ -505,7 +507,7 @@ function install_bbr() {
 		echo "net.core.default_qdisc = fq" >>/etc/sysctl.conf
 		sysctl -p >/dev/null 2>&1
 		echo
-		green "由于你的 VPS 内核支持开启 BBR ...已经为你启用 BBR 优化...."
+		green "已为你的 VPS启用 BBR 加速...."
 		echo
 	else
 		# https://teddysun.com/489.html
@@ -519,7 +521,7 @@ function update_v2ray() {
 }
 
 
-function remove_v2ray(){
+function remove_v2ray_nginx(){
 
     /etc/nginx/sbin/nginx -s stop
     systemctl stop v2ray.service
@@ -538,7 +540,7 @@ function remove_v2ray(){
 function start_menu(){
     clear
     green " ========================================================="
-    green " 介绍: 一键安装 v2ray+ws+tls，支持CDN+自选节点"
+    green " 介绍: 一键安装 V2ray+WS+TLS+CDN，支持CF自选节点"
     green " 支持: Centos7/Debian9+/Ubuntu16.04+"
     green " 时间: 2020-10-19"
     green " ========================================================="
@@ -560,27 +562,46 @@ function start_menu(){
     check_env
     install
     install_bbr
+    green "安装完成！"
+    sleep 2
     ;;
     2)
     update_v2ray
+    green "v2ray更新完成！"
+    sleep 2
+    start_menu
     ;;
     3)
     web_download
     start_menu
+    green "伪装网站切换完成！"
+    sleep 2
     ;;
     4)
     change_bbr
+    green "bbr切换完成！"
+    sleep 2
+    start_menu
     ;;
     5)
     systemctl restart v2ray.service
     systemctl restart nginx.service
+    green "重启服务完成！"
+    sleep 2
+    start_menu
     ;;
     6)
     systemctl stop v2ray.service
     systemctl stop nginx.service
+    green "停止服务完成！"
+    sleep 2
+    start_menu
     ;;
     7)
-    remove_v2ray
+    remove_v2ray_ngin
+    green "系统还原到初始状态！"
+    sleep 2
+    start_menu
     ;;
     8)
     exit 1
@@ -588,7 +609,7 @@ function start_menu(){
     *)
     clear
     red "请输入正确的数字！"
-    sleep 2s
+    sleep 2
     start_menu
     ;;
     esac
