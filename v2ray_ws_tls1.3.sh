@@ -547,6 +547,7 @@ function start_menu(){
     green " 2. 更新 V2ray主程序"
     green " 3. 更换 伪装网站"
     green " 4. 更换 BBR加速"
+    green " --------------------------------------------------------"
     green " 5. 重启 V2ray+Nginx"
     green " 6. 停止 V2ray+Nginx"
     green " 7. 卸载 V2ray+Nginx"
