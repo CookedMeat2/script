@@ -360,7 +360,7 @@ EOF
 v2ray_link="vmess://$(base64 -w 0 /usr/local/etc/v2ray/qr_config.json)"
 rm -f /usr/local/etc/v2ray/qr_config.json
 
-green "==============================="
+green "=============================="
 green "         安装已经完成"
 green "===========配置参数============"
 green "地址：${your_domain}"
@@ -444,7 +444,7 @@ web_dir="/etc/nginx/html"
     10)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/phaseshift/download
-    ;;
+      ;;
     11)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/horizons/download
