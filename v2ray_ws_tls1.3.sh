@@ -541,9 +541,9 @@ function remove_v2ray(){
 function start_menu(){
     clear
     green " ========================================================="
-    green " 介绍:        一键安装 v2ray+ws+tls，支持CDN+自选节点"
-    green " 支持:        Centos7/Debian9+/Ubuntu16.04+"
-    green " 作者:        CookedMeat2"
+    green " 介绍: 一键安装 v2ray+ws+tls，支持CDN+自选节点"
+    green " 支持: Centos7/Debian9+/Ubuntu16.04+"
+    green " 作者: CookedMeat2"
     green " ========================================================="
     echo
     green " 1. 安装 V2ray+WS+TLS"
