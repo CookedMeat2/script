@@ -14,7 +14,7 @@ function yellow(){
 
 function check_os(){
 green "系统支持检测"
-sleep 2
+sleep 4
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
@@ -56,17 +56,17 @@ if [ "$release" == "centos" ]; then
 elif [ "$release" == "ubuntu" ]; then
     if  [ -n "$(grep ' 14\.' /etc/os-release)" ] ;then
     red "==============="
-    red "当前系统不受支持"
+    red "不受支持的系统"
     red "==============="
     exit
     fi
     if  [ -n "$(grep ' 12\.' /etc/os-release)" ] ;then
     red "==============="
-    red "当前系统不受支持"
+    red "不受支持的系统"
     red "==============="
     exit
     fi
-    green "当前系统支持"
+    green "支持的系统"
     ufw_status=`systemctl status ufw | grep "Active: active"`
     if [ -n "$ufw_status" ]; then
         ufw allow 80/tcp >/dev/null 2>&1
@@ -84,7 +84,7 @@ fi
 
 function check_env(){
 green "安装环境监测"
-sleep 2
+sleep 4
 if [ -f "/etc/selinux/config" ]; then
     CHECK=$(grep SELINUX= /etc/selinux/config | grep -v "#")
     if [ "$CHECK" != "SELINUX=disabled" ]; then
@@ -165,7 +165,7 @@ function install_nginx(){
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
     green "开始编译安装nginx及常用组件，编译时间较长，通常要5到10分钟，请耐心等待。"
-    sleep 2
+    sleep 4
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
 
@@ -538,6 +538,8 @@ function remove_v2ray_nginx(){
     /etc/nginx/sbin/nginx -s stop
     systemctl stop v2ray.service
     systemctl disable v2ray.service
+    systemctl stop nginx.service
+    systemctl disable nginx.service
 
 
     rm -rf /usr/local/bin/v2ray /usr/local/bin/v2ctl
@@ -575,44 +577,44 @@ function start_menu(){
     install
     install_bbr
     green "安装完成！"
-    sleep 2
+    sleep 4
     ;;
     2)
     update_v2ray
     green "v2ray更新完成！"
-    sleep 2
+    sleep 4
     start_menu
     ;;
     3)
     web_download
     start_menu
     green "伪装网站切换完成！"
-    sleep 2
+    sleep 4
     ;;
     4)
     change_bbr
     green "bbr切换完成！"
-    sleep 2
+    sleep 4
     start_menu
     ;;
     5)
     systemctl restart v2ray.service
     systemctl restart nginx.service
     green "重启服务完成！"
-    sleep 2
+    sleep 4
     start_menu
     ;;
     6)
     systemctl stop v2ray.service
     systemctl stop nginx.service
     green "停止服务完成！"
-    sleep 2
+    sleep 4
     start_menu
     ;;
     7)
     remove_v2ray_ngin
     green "系统还原到初始状态！"
-    sleep 2
+    sleep 4
     start_menu
     ;;
     8)
@@ -621,7 +623,7 @@ function start_menu(){
     *)
     clear
     red "请输入正确的数字！"
-    sleep 2
+    sleep 4
     start_menu
     ;;
     esac
