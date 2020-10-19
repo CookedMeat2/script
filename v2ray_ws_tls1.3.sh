@@ -166,7 +166,7 @@ function install_nginx(){
     sleep 3s
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
-    
+
 cat > /etc/nginx/conf/nginx.conf <<-EOF
 user  root;
 worker_processes  1;
@@ -219,17 +219,17 @@ EOF
         --fullchain-file /etc/nginx/ssl/fullchain.cer
     newpath=$(cat /dev/urandom | head -1 | md5sum | head -c 4)
 cat > /etc/nginx/conf.d/default.conf<<-EOF
-server { 
+server {
     listen       80;
     server_name  $your_domain;
-    rewrite ^(.*)$  https://\$host\$1 permanent; 
+    rewrite ^(.*)$  https://\$host\$1 permanent;
 }
 server {
     listen 443 ssl http2;
     server_name $your_domain;
     root /etc/nginx/html;
     index index.php index.html;
-    ssl_certificate /etc/nginx/ssl/fullchain.cer; 
+    ssl_certificate /etc/nginx/ssl/fullchain.cer;
     ssl_certificate_key /etc/nginx/ssl/$your_domain.key;
     #TLS 版本控制
     ssl_protocols   TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
@@ -243,7 +243,7 @@ server {
     #access_log /var/log/nginx/access.log combined;
     location /$newpath {
         proxy_redirect off;
-        proxy_pass http://127.0.0.1:11234; 
+        proxy_pass http://127.0.0.1:11234;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -254,16 +254,16 @@ EOF
 cat > /etc/systemd/system/nginx.service<<-EOF
 [Unit]
 Description=nginx service
-After=network.target 
-   
-[Service] 
-Type=forking 
+After=network.target
+
+[Service]
+Type=forking
 ExecStart=/etc/nginx/sbin/nginx
 ExecReload=/etc/nginx/sbin/nginx -s reload
 ExecStop=/etc/nginx/sbin/nginx -s quit
-PrivateTmp=true 
-   
-[Install] 
+PrivateTmp=true
+
+[Install]
 WantedBy=multi-user.target
 EOF
 chmod 777 /etc/systemd/system/nginx.service
@@ -276,7 +276,7 @@ install_v2ray
 #安装v2ray
 function install_v2ray(){
     #bash <(curl -L -s https://install.direct/go.sh)
-    bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) 
+    bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     cd /usr/local/etc/v2ray/
     rm -f config.json
 cat > /usr/local/etc/v2ray/config.json<<-EOF
@@ -322,8 +322,8 @@ EOF
     unzip web.zip >/dev/null 2>&1
     systemctl enable v2ray.service
     systemctl restart v2ray.service
-    systemctl restart nginx.service    
-    
+    systemctl restart nginx.service
+
 cat > /usr/local/etc/v2ray/myconfig.json<<-EOF
 {
 ===========配置参数=============
@@ -336,12 +336,12 @@ uuid：${v2uuid}
 别名：myws
 路径：${newpath}
 底层传输：tls
-green 
+green
 green "nginx配置文件：/etc/nginx/conf/nginx.conf"
 green "v2ray配置文件：/usr/local/etc/v2ray/config.json"
-green 
+green
 green "Qv2ray二维码链接：${v2ray_link}"
-green 
+green
 }
 EOF
 
@@ -376,13 +376,13 @@ green "传输协议：ws"
 green "别名：myws"
 green "路径：${newpath}"
 green "底层传输：tls"
-green 
+green
 green "nginx配置文件：/etc/nginx/conf/nginx.conf"
 green "v2ray配置文件：/usr/local/etc/v2ray/config.json"
-green 
+green
 green "Qv2ray二维码链接：${v2ray_link}"
 green "当前信息保存在 ：/usr/local/etc/v2ray/myconfig.json"
-green 
+green
 }
 
 
@@ -445,7 +445,7 @@ web_dir="/etc/nginx/html"
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/solarize/download
       ;;
     10)
-      rm -f ./*    
+      rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/phaseshift/download
       ;;
     11)
@@ -519,31 +519,31 @@ function install_bbr() {
 function update_v2ray() {
     bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     systemctl restart v2ray
-}  
- 
- 
+}
+
+
 function remove_v2ray(){
 
     /etc/nginx/sbin/nginx -s stop
     systemctl stop v2ray.service
     systemctl disable v2ray.service
-    
-    
+
+
     rm -rf /usr/local/bin/v2ray /usr/local/bin/v2ctl
     rm -rf /usr/local/share/v2ray/ /usr/local/etc/v2ray/
     rm -rf /etc/systemd/system/v2ray*
     rm -rf /etc/nginx
-    
+
     green "nginx、v2ray卸载完成！"
-    
+
 }
 
 function start_menu(){
     clear
     green " ========================================================="
-    green " 介绍       : 一键安装 v2ray+ws+tls，支持CDN+自选节点"
-    green " 支持       : Centos7/Debian9+/Ubuntu16.04+"
-    green " Author     : Cookedmeat"
+    green " 介绍:        一键安装 v2ray+ws+tls，支持CDN+自选节点"
+    green " 支持:        Centos7/Debian9+/Ubuntu16.04+"
+    green " 作者:        CookedMeat2"
     green " ========================================================="
     echo
     green " 1. 安装 V2ray+WS+TLS"
@@ -553,7 +553,7 @@ function start_menu(){
     green " 5. 卸载 V2ray+Nginx"
     green " 6. 退出"
     echo
-    read -p "请输入一个数字选择:" num
+    read -p "请输入一个数字后回车:" num
     case "$num" in
     1)
     check_os
@@ -572,7 +572,7 @@ function start_menu(){
     change_bbr
     ;;
     5)
-    remove_v2ray 
+    remove_v2ray
     ;;
     6)
     exit 1
