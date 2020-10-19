@@ -387,22 +387,22 @@ function web_download() {
 web_dir="/etc/nginx/html"
   [[ ! -d "${web_dir}" ]] && mkdir "${web_dir}"
   while [[ ! -f "${web_dir}/web.zip" ]]; do
-    green "请选择下面任意一个网站:
-       1. https://templated.co/intensify
-       2. https://templated.co/binary(人物照片)
-       3. https://templated.co/retrospect(风景照片)
-       4. https://templated.co/spatial(山林照片)
-       5. https://templated.co/monochromed(灰色城市)
-       6. https://templated.co/transit(博客留言)
-       7. https://templated.co/interphase(靓丽城市)
-       8. https://templated.co/ion(大山照片)
-       9. https://templated.co/solarize(绿荫照片)
-      10. https://templated.co/phaseshift(绿荫照片)
-      11. https://templated.co/horizons(红果照片)
-      12. https://templated.co/grassygrass(绿草照片)
-      13. https://templated.co/breadth(指南针照片)
-      14. https://templated.co/undeviating(高楼蓝天)
-      15. https://templated.co/lorikeet(绿色鹦鹉)"
+    green "请选择下面任意一个网站:"
+    green "1. https://templated.co/intensify"
+    green "2. https://templated.co/binary(人物照片)"
+    green "3. https://templated.co/retrospect(风景照片)"
+    green "4. https://templated.co/spatial(山林照片)"
+    green "5. https://templated.co/monochromed(灰色城市)"
+    green "6. https://templated.co/transit(博客留言)"
+    green "7. https://templated.co/interphase(靓丽城市)"
+    green "8. https://templated.co/ion(大山照片)"
+    green "9. https://templated.co/solarize(绿荫照片)"
+    green "10. https://templated.co/phaseshift(绿荫照片)"
+    green "11. https://templated.co/horizons(红果照片)"
+    green "12. https://templated.co/grassygrass(绿草照片)"
+    green "13. https://templated.co/breadth(指南针照片)"
+    green "14. https://templated.co/undeviating(高楼蓝天)"
+    green "15. https://templated.co/lorikeet(绿色鹦鹉)"
     read -rp "$("请输入要下载伪装网站的数字:")" aNum
     case $aNum in
     1)
