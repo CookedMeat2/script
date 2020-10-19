@@ -72,11 +72,11 @@ elif [ "$release" == "ubuntu" ]; then
         ufw allow 80/tcp >/dev/null 2>&1
         ufw allow 443/tcp >/dev/null 2>&1
     fi
-    apt-get update
+    apt-get update >/dev/null 2>&1
     green "安装nginx编译依赖"
     apt-get install -y vim vnstat htop build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 elif [ "$release" == "debian" ]; then
-    apt-get update
+    apt-get update >/dev/null 2>&1
     green "安装nginx编译依赖"
     apt-get install -y vim vnstat htop build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 fi
@@ -125,7 +125,7 @@ fi
 function install(){
     $systemPackage install -y wget curl unzip >/dev/null 2>&1
     green "======================="
-    blue "请输入绑定到本VPS的域名"
+    yellow "请输入绑定到本VPS的域名"
     green "======================="
     read your_domain
     real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
@@ -405,7 +405,7 @@ web_dir="/etc/nginx/html"
     green "13. https://templated.co/breadth(指南针照片)"
     green "14. https://templated.co/undeviating(高楼蓝天)"
     green "15. https://templated.co/lorikeet(绿色鹦鹉)"
-    read -p "$("请输入要下载伪装网站的数字:")" aNum
+    read -p "请输入要下载伪装网站的数字:" aNum
     case $aNum in
     1)
       rm -f ./*
