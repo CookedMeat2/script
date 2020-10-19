@@ -403,71 +403,71 @@ web_dir="/etc/nginx/html"
     green "13. https://templated.co/breadth(指南针照片)"
     green "14. https://templated.co/undeviating(高楼蓝天)"
     green "15. https://templated.co/lorikeet(绿色鹦鹉)"
-    read -rp "$("请输入要下载伪装网站的数字:")" aNum
+    read -p "$("请输入要下载伪装网站的数字:")" aNum
     case $aNum in
     1)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/intensify/download
-      ;;
+    ;;
     2)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/binary/download
-      ;;
+    ;;
     3)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/retrospect/download
-      ;;
+    ;;
     4)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/spatial/download
-      ;;
+    ;;
     5)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/monochromed/download
-      ;;
+    ;;
     6)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/transit/download
-      ;;
+    ;;
     7)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/interphase/download
-      ;;
+    ;;
     8)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/ion/download
-      ;;
+    ;;
     9)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/solarize/download
-      ;;
+    ;;
     10)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/phaseshift/download
-      ;;
+    ;;
     11)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/horizons/download
-      ;;
+    ;;
     12)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/grassygrass/download
-      ;;
+    ;;
     13)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/breadth/download
-      ;;
+    ;;
     14)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/undeviating/download
-      ;;
+    ;;
     15)
       rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/lorikeet/download
-      ;;
+    ;;
     *)
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/intensify/download
-      ;;
+    ;;
     esac
   done
   unzip -o -d ${web_dir} ${web_dir}/web.zip
