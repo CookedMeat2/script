@@ -480,6 +480,7 @@ web_dir="/etc/nginx/html"
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/lorikeet/download
     ;;
     *)
+      rm -f ./*
       wget -O ${web_dir}/web.zip --no-check-certificate https://templated.co/intensify/download
     ;;
     esac
