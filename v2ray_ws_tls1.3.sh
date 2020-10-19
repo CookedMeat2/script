@@ -73,11 +73,11 @@ elif [ "$release" == "ubuntu" ]; then
     fi
     apt-get update >/dev/null 2>&1
     green "开始安装nginx编译依赖"
-    apt-get install -y build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
+    apt-get install -y vim vnstat htop build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 elif [ "$release" == "debian" ]; then
     apt-get update >/dev/null 2>&1
     green "开始安装nginx编译依赖"
-    apt-get install -y build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
+    apt-get install -y vim vnstat htop build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 fi
 }
 
@@ -162,7 +162,7 @@ function install_nginx(){
     tar xf nginx-1.15.8.tar.gz && rm nginx-1.15.8.tar.gz >/dev/null 2>&1
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
-    green "开始编译安装nginx，编译等待时间通常需要5到10分钟，请耐心等待，"
+    green "开始编译安装nginx及常用组件，编译时间较长，通常需要5到10分钟，请耐心等待。"
     sleep 3s
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
@@ -188,8 +188,6 @@ http {
     client_max_body_size 20m;
     #gzip  on;
     include /etc/nginx/conf.d/*.conf;
-}
-
 # 将v2ray的TLS功能剥离，用Nginx来实现TLS
 server {
     listen  443 ssl;
@@ -201,7 +199,7 @@ server {
     location / {
     proxy_pass http://localhost:11234;
     proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Upgrade \$http_upgrade;
     proxy_set_header Connection "upgrade";
     }
 }
@@ -209,7 +207,7 @@ server {
 server {
     listen          80;
     server_name      $your_domain;
-    return 301 https://$server_name$request_uri;
+    return 301 https://\$server_name\$request_uri;
 }
 EOF
     curl https://get.acme.sh | sh
@@ -255,14 +253,12 @@ cat > /etc/systemd/system/nginx.service<<-EOF
 [Unit]
 Description=nginx service
 After=network.target
-
 [Service]
 Type=forking
 ExecStart=/etc/nginx/sbin/nginx
 ExecReload=/etc/nginx/sbin/nginx -s reload
 ExecStop=/etc/nginx/sbin/nginx -s quit
 PrivateTmp=true
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -336,12 +332,12 @@ uuid：${v2uuid}
 别名：myws
 路径：${newpath}
 底层传输：tls
-green
-green "nginx配置文件：/etc/nginx/conf/nginx.conf"
-green "v2ray配置文件：/usr/local/etc/v2ray/config.json"
-green
-green "Qv2ray二维码链接：${v2ray_link}"
-green
+
+nginx配置文件：/etc/nginx/conf/nginx.conf
+v2ray配置文件：/usr/local/etc/v2ray/config.json
+
+Qv2ray二维码链接：${v2ray_link}
+
 }
 EOF
 
@@ -381,6 +377,7 @@ green "nginx配置文件：/etc/nginx/conf/nginx.conf"
 green "v2ray配置文件：/usr/local/etc/v2ray/config.json"
 green
 green "Qv2ray二维码链接：${v2ray_link}"
+green
 green "当前信息保存在 ：/usr/local/etc/v2ray/myconfig.json"
 green
 }
@@ -406,7 +403,7 @@ web_dir="/etc/nginx/html"
       13. https://templated.co/breadth(指南针照片)
       14. https://templated.co/undeviating(高楼蓝天)
       15. https://templated.co/lorikeet(绿色鹦鹉)"
-    read -rp "$(green "请输入你要下载网站的数字:")" aNum
+    read -rp "$("请输入要下载伪装网站的数字:")" aNum
     case $aNum in
     1)
       rm -f ./*
@@ -543,15 +540,17 @@ function start_menu(){
     green " ========================================================="
     green " 介绍: 一键安装 v2ray+ws+tls，支持CDN+自选节点"
     green " 支持: Centos7/Debian9+/Ubuntu16.04+"
-    green " 作者: CookedMeat2"
+    green " 时间: 2020-10-19"
     green " ========================================================="
     echo
     green " 1. 安装 V2ray+WS+TLS"
-    green " 2. 更新 V2ray程序"
-    green " 3. 切换 伪装网站"
-    green " 4. 切换 BBR加速"
-    green " 5. 卸载 V2ray+Nginx"
-    green " 6. 退出"
+    green " 2. 更新 V2ray主程序"
+    green " 3. 更换 伪装网站"
+    green " 4. 更换 BBR加速"
+    green " 5. 重启 V2ray+Nginx"
+    green " 6. 停止 V2ray+Nginx"
+    green " 7. 卸载 V2ray+Nginx"
+    green " 8. 退出"
     echo
     read -p "请输入一个数字后回车:" num
     case "$num" in
@@ -572,9 +571,17 @@ function start_menu(){
     change_bbr
     ;;
     5)
-    remove_v2ray
+    systemctl restart v2ray.service
+    systemctl restart nginx.service
     ;;
     6)
+    systemctl stop v2ray.service
+    systemctl stop nginx.service
+    ;;
+    7)
+    remove_v2ray
+    ;;
+    8)
     exit 1
     ;;
     *)
