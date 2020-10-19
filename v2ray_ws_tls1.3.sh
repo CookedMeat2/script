@@ -128,6 +128,7 @@ function install(){
     yellow "请输入绑定到本VPS的域名"
     green "======================="
     read your_domain
+    short_domain=`echo ${your_domain} | awk -F '.' '{print $(NF-1) "." $NF}'`
     real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
     local_addr=`curl ipv4.icanhazip.com`
     if [ $real_addr == $local_addr ] ; then
@@ -205,19 +206,42 @@ server {
     proxy_set_header Connection "upgrade";
     }
 }
+
+# 指定nginx的目录和证书
+server {
+    listen       443 ssl;
+    server_name      $your_domain;
+    ssl_certificate       /etc/nginx/ssl/fullchain.cer;
+    ssl_certificate_key   /etc/nginx/ssl/$your_domain.key;
+    root /etc/nginx/html;
+    index index.php index.html index.htm;
+}
+
+# 长域名跳到短域名
+server {
+    listen  443 ssl;
+    server_name           $your_domain;
+    location / {
+    proxy_pass http://$short_domain;
+    }
+}
+
 # http跳到https
 server {
     listen          80;
     server_name      $your_domain;
     return 301 https://\$server_name\$request_uri;
+    }
 }
 EOF
+
     curl https://get.acme.sh | sh
     ~/.acme.sh/acme.sh  --issue  -d $your_domain  --standalone
     ~/.acme.sh/acme.sh  --installcert  -d  $your_domain   \
         --key-file   /etc/nginx/ssl/$your_domain.key \
         --fullchain-file /etc/nginx/ssl/fullchain.cer
     newpath=$(cat /dev/urandom | head -1 | md5sum | head -c 4)
+
 cat > /etc/nginx/conf.d/default.conf<<-EOF
 server {
     listen       80;
@@ -335,8 +359,8 @@ uuid：${v2uuid}
 路径：${newpath}
 底层传输：tls
 
-nginx配置文件：/etc/nginx/conf/nginx.conf
-v2ray配置文件：/usr/local/etc/v2ray/config.json
+nginx配置路径：/etc/nginx/conf/nginx.conf
+v2ray配置路径：/usr/local/etc/v2ray/config.json
 
 Qv2ray二维码链接：${v2ray_link}
 
@@ -344,19 +368,7 @@ Qv2ray二维码链接：${v2ray_link}
 EOF
 
 cat > /usr/local/etc/v2ray/qr_config.json<<-EOF
-{
-"add":"${real_addr}",
-"aid":64,
-"host":"${your_domain}",
-"id":"${v2uuid}",
-"net":"ws",
-"path":"/${newpath}",
-"port":443,
-"ps":"myws",
-"tls":"tls",
-"type":"none",
-"v":2
-}
+{"add":"${real_addr}","id":"${v2uuid}","net":"ws","host":"${your_domain}","port":"443","ps":"myws","tls":"tls","v":2,"aid":64,"path":"/${newpath}","type":"none"}
 EOF
 
 v2ray_link="vmess://$(base64 -w 0 /usr/local/etc/v2ray/qr_config.json)"
