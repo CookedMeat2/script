@@ -612,7 +612,7 @@ function start_menu(){
     start_menu
     ;;
     7)
-    remove_v2ray_ngin
+    remove_v2ray_nginx
     start_menu
     ;;
     8)
