@@ -13,6 +13,9 @@ function yellow(){
 }
 
 function check_os(){
+green
+green
+green " --------------------------------------------------------"
 green "系统支持检测"
 sleep 5
 if [[ -f /etc/redhat-release ]]; then
@@ -124,14 +127,14 @@ Port443=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 443`
 if [ -n "$Port80" ]; then
     process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
     red "==================================================================="
-    red "检测到80端口被占用，占用进程：${process80}，请先结束相关服务和进程"
+    red "     检测到80端口被占用，占用进程：${process80}，请先卸载"
     red "==================================================================="
     exit 1
 fi
 if [ -n "$Port443" ]; then
     process443=`netstat -tlpn | awk -F '[: ]+' '$5=="443"{print $9}'`
     red "====================================================================="
-    red "检测到443端口被占用，占用进程：${process443}，请先结束相关服务和进程"
+    red "     检测到443端口被占用，占用进程：${process443}，请先卸载"
     red "====================================================================="
     exit 1
 fi
@@ -139,12 +142,14 @@ fi
 
 function install(){
     green "=============================================="
-    yellow "  请输入要绑定到本VPS的域名，可以是二级域名"
+    yellow " 请把要绑定的域名解析到VPS的IP，并关闭CDN！"
+    yellow " 再在下方输入这个域名，一定不能出错！！！"
     green "=============================================="
-    read your_domain
+	read -p "要绑定的域名（例如 v2ray.com): " your_domain
     short_domain=`echo ${your_domain} | awk -F '.' '{print $(NF-1) "." $NF}'`
     real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
     local_addr=`curl ipv4.icanhazip.com`
+
     if [ $real_addr == $local_addr ] ; then
     green "=============================================="
 	green "         域名解析正常，开始安装nginx"
@@ -180,10 +185,11 @@ function install_nginx(){
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
     green
     green "=============================================="
-    green "  正在编译安装nginx及组件，可能等待时间较长，"
-    green "  通常需要5到10分钟，可以去喝口水或听一首歌？"
+    green "  正在编译安装nginx和组件，可能等待时间较长，"
+    green "  通常要5到10分钟，可以去喝一口水或听一首歌？"
     green "=============================================="
-    green "……"
+    green "………………"
+    green
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
 
@@ -558,7 +564,9 @@ function update_v2ray() {
 }
 
 function remove_v2ray_nginx() {
-
+	read -p "卸载后脚本安装的程序将全部清除，确定需要卸载? 请输入 [Y/n] :" yn
+	[ -z "${yn}" ] && yn="y"
+	if [[ $yn == [Yy] ]]; then
     systemctl stop v2ray.service
     systemctl disable v2ray.service
     systemctl stop nginx.service
@@ -571,13 +579,15 @@ function remove_v2ray_nginx() {
 
     green "卸载完成，系统已还原"
     sleep 5
-
+	else
+	    exit 1
+	fi
 }
 
 function start_menu(){
     clear
     green " ========================================================="
-    green " 介绍: 一键安装 V2ray+ws+tls+CDN，支持cf自选节点。"
+    green " 介绍: 一键安装 V2ray+ws+tls+CDN，支持cf自选节点"
     green " 支持: Centos7/Debian9+/Ubuntu16.04+"
     green " 作者: CookedMeat2"
     green " 时间: 2020-10-19"
