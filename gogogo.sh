@@ -17,7 +17,6 @@ green
 green
 green "系统支持检测"
 green
-green
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
@@ -143,7 +142,7 @@ fi
 function install(){
     green "=============================================="
     yellow "   请把要绑定的域名解析到VPS的IP，并关闭CDN！"
-    yellow "   再在下方输入这个域名，一定不能出错！！！"
+    yellow "     再在下方输入这个域名，一定不能出错！！！"
     green "=============================================="
 	read -p "要绑定的域名（例如 v2ray.com): " your_domain
     short_domain=`echo ${your_domain} | awk -F '.' '{print $(NF-1) "." $NF}'`
@@ -186,7 +185,7 @@ function install_nginx(){
     green
     green "=============================================="
     green "  正在编译安装nginx和组件，可能等待时间较长，"
-    green "  通常要5到10分钟，可以去喝一口水或听一首歌？"
+    green "  通常要5到10分钟，可以去喝一杯水或听一首歌？"
     green "=============================================="
     green
     green "                正在进行……"
@@ -601,13 +600,13 @@ function start_menu(){
     green "  3. 更换 伪装网站"
     green
     green "  4. 更换 BBR加速"
-    green "---------------------------------------------------------"
+    green "----------------------------------"
     green "  5. 编辑 V2ray配置"
     green
     green "  6. 编辑 Nginx配置"
     green
     green "  7. 查看 账号信息"
-    green "---------------------------------------------------------"
+    green "----------------------------------"
     green "  8. 重启 V2ray+Nginx"
     green
     green "  9. 停止 V2ray+Nginx"
