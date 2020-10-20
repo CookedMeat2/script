@@ -240,7 +240,7 @@ curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh  --installcert  -d  $your_domain   \
     --key-file   /etc/nginx/ssl/$your_domain.key \
     --fullchain-file /etc/nginx/ssl/fullchain.cer
-    
+
 newpath=$(cat /dev/urandom | head -1 | md5sum | head -c 4)
 
 cat > /etc/nginx/conf.d/default.conf<<-EOF
@@ -541,7 +541,7 @@ function update_v2ray() {
 }
 
 
-function remove_v2ray_nginx(){
+function remove_v2ray_nginx() {
 
     systemctl stop v2ray.service
     systemctl disable v2ray.service
