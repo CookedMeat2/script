@@ -15,9 +15,9 @@ function yellow(){
 function check_os(){
 green
 green
-green " --------------------------------------------------------"
 green "系统支持检测"
-sleep 5
+green
+green
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
@@ -73,7 +73,7 @@ elif [ "$release" == "ubuntu" ]; then
     green "         系统支持检测：支持当前系统"
     green "=============================================="
     green
-    green "安装nginx编译需要的软件"
+    green "           安装nginx编译需要的软件"
     $systemPackage update >/dev/null 2>&1
     $systemPackage install -y vim vnstat htop wget curl unzip build-essential libpcre3 libpcre3-dev zlib1g-dev liblua5.1-dev libluajit-5.1-dev libgeoip-dev google-perftools libgoogle-perftools-dev >/dev/null 2>&1
 elif [ "$release" == "debian" ]; then
@@ -142,8 +142,8 @@ fi
 
 function install(){
     green "=============================================="
-    yellow " 请把要绑定的域名解析到VPS的IP，并关闭CDN！"
-    yellow " 再在下方输入这个域名，一定不能出错！！！"
+    yellow "   请把要绑定的域名解析到VPS的IP，并关闭CDN！"
+    yellow "   再在下方输入这个域名，一定不能出错！！！"
     green "=============================================="
 	read -p "要绑定的域名（例如 v2ray.com): " your_domain
     short_domain=`echo ${your_domain} | awk -F '.' '{print $(NF-1) "." $NF}'`
@@ -188,7 +188,8 @@ function install_nginx(){
     green "  正在编译安装nginx和组件，可能等待时间较长，"
     green "  通常要5到10分钟，可以去喝一口水或听一首歌？"
     green "=============================================="
-    green "………………"
+    green
+    green "                正在进行……"
     green
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
