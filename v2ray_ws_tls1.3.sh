@@ -403,7 +403,7 @@ web_dir="/etc/nginx/html"
   [[ ! -d "${web_dir}" ]] && mkdir "${web_dir}"
   while [[ ! -f "${web_dir}/web.zip" ]]; do
     green "请选择下面任意一个网站模板:"
-    green "1. https://templated.co/intensify"
+    green "1. https://templated.co/intensify(素雅模板)"
     green "2. https://templated.co/binary(人物照片)"
     green "3. https://templated.co/retrospect(风景照片)"
     green "4. https://templated.co/spatial(山林照片)"
