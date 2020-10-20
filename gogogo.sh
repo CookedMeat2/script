@@ -615,7 +615,7 @@ function start_menu(){
     green
     green " 11. 退出脚本"
     green
-    read -p "请输入一个数字后回车:" num
+    read -p "请输入一个数字再按回车:" num
     case "$num" in
     1)
     check_os
