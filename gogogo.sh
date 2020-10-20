@@ -510,7 +510,7 @@ function web_download () {
     ;;
     esac
     unzip web.zip >/dev/null 2>&1
-    green "网站已切换，请在浏览器查看。"
+    green "伪装网站已切换，请输入域名查看。"
     sleep 5
 }
 
@@ -577,7 +577,7 @@ function remove_v2ray_nginx() {
     rm -rf /etc/systemd/system/v2ray* >/dev/null 2>&1
     rm -rf /etc/nginx >/dev/null 2>&1
 
-    green "卸载完成，系统已还原"
+    green "卸载完成"
     sleep 5
 	else
 	    exit 1
@@ -586,26 +586,27 @@ function remove_v2ray_nginx() {
 
 function start_menu(){
     clear
-    green " ========================================================="
-    green " 介绍: 一键安装 V2ray+ws+tls+CDN，支持cf自选节点"
+    green
+    green "========================================================="
+    green " 介绍: 支持一键安装 Nginx+V2ray+ws+TLS1.3，可自选CF的CDN节点"
     green " 支持: Centos7/Debian9+/Ubuntu16.04+"
     green " 作者: CookedMeat2"
     green " 时间: 2020-10-19"
-    green " ========================================================="
-    green "  1. 安装 V2ray+ws+tls"
+    green "========================================================="
+    green "  1. 安装 Nginx+V2ray+ws+TLS1.3"
     green
     green "  2. 更新 V2ray主程序"
     green
     green "  3. 更换 伪装网站"
     green
     green "  4. 更换 BBR加速"
-    green " --------------------------------------------------------"
+    green "---------------------------------------------------------"
     green "  5. 编辑 V2ray配置"
     green
     green "  6. 编辑 Nginx配置"
     green
     green "  7. 查看 账号信息"
-    green " --------------------------------------------------------"
+    green "---------------------------------------------------------"
     green "  8. 重启 V2ray+Nginx"
     green
     green "  9. 停止 V2ray+Nginx"
@@ -648,14 +649,14 @@ function start_menu(){
     8)
     systemctl restart v2ray.service
     systemctl restart nginx.service
-    green "v2ray+nginx服务已重启！"
+    green "V2ray+Nginx服务已重启！"
     sleep 5
     start_menu
     ;;
     9)
     systemctl stop v2ray.service
     systemctl stop nginx.service
-    green "v2ray+nginx服务已停止！"
+    green "V2ray+Nginx服务已停止！"
     sleep 5
     start_menu
     ;;
@@ -674,5 +675,5 @@ function start_menu(){
     ;;
     esac
 }
-
+clear
 start_menu
