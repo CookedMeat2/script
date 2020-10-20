@@ -410,7 +410,7 @@ v2rayN分享链接：${v2ray_link}
 
 nginx配置：/etc/nginx/conf/nginx.conf
 v2ray配置：/usr/local/etc/v2ray/config.json
-伪装网站：https://$your_domain (可更换模板)
+伪装网站：https://$your_domain (选"3"可更换模板)
 
 EOF
 
