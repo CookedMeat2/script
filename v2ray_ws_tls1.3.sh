@@ -164,8 +164,8 @@ function install_nginx(){
     tar xf nginx-1.15.8.tar.gz && rm nginx-1.15.8.tar.gz >/dev/null 2>&1
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
-    green "开始编译安装nginx及组件，等待可能时间较长，"
-    green "通常需要5到10分钟，先去喝口水或小憩一下？"
+    green "开始编译安装nginx及组件，可能等待时间较长，"
+    green "通常需要5到10分钟，可以去喝口水或小憩一下？"
     sleep 6
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
@@ -348,6 +348,13 @@ EOF
     systemctl restart v2ray.service
     systemctl restart nginx.service
 
+cat > /usr/local/etc/v2ray/qr_config.json<<-EOF
+{"add":"${real_addr}","id":"${v2uuid}","net":"ws","host":"${your_domain}","port":"443","ps":"Vmess_${newpath}","tls":"tls","v":2,"aid":64,"path":"/${newpath}","type":"none"}
+EOF
+
+v2ray_link="vmess://$(base64 -w 0 /usr/local/etc/v2ray/qr_config.json)"
+rm -f /usr/local/etc/v2ray/qr_config.json
+
 cat > /usr/local/etc/v2ray/myconfig.json<<-EOF
 {
 =========手动设置参数===========
@@ -361,20 +368,13 @@ uuid：${v2uuid}
 路径：${newpath}
 底层传输：tls
 
-nginx配置路径：/etc/nginx/conf/nginx.conf
-v2ray配置路径：/usr/local/etc/v2ray/config.json
+nginx配置：/etc/nginx/conf/nginx.conf
+v2ray配置：/usr/local/etc/v2ray/config.json
 
 Qv2ray二维码链接：${v2ray_link}
 
 }
 EOF
-
-cat > /usr/local/etc/v2ray/qr_config.json<<-EOF
-{"add":"${real_addr}","id":"${v2uuid}","net":"ws","host":"${your_domain}","port":"443","ps":"Vmess_${newpath}","tls":"tls","v":2,"aid":64,"path":"/${newpath}","type":"none"}
-EOF
-
-v2ray_link="vmess://$(base64 -w 0 /usr/local/etc/v2ray/qr_config.json)"
-rm -f /usr/local/etc/v2ray/qr_config.json
 
 green "==============================="
 green "         安装已经完成"
@@ -389,9 +389,9 @@ green "别名：Vmess_${newpath}"
 green "路径：${newpath}"
 green "底层传输：tls"
 green
-green "nginx配置路径：/etc/nginx/conf/nginx.conf"
-green "v2ray配置路径：/usr/local/etc/v2ray/config.json"
-green "当前设置 ：/usr/local/etc/v2ray/myconfig.json"
+green "nginx配置：/etc/nginx/conf/nginx.conf"
+green "v2ray配置：/usr/local/etc/v2ray/config.json"
+green "当前设置信息 ：/usr/local/etc/v2ray/myconfig.json"
 green
 green "Qv2ray二维码链接：${v2ray_link}"
 green
@@ -401,7 +401,7 @@ green
 function web_download() {
 web_dir="/etc/nginx/html"
   [[ ! -d "${web_dir}" ]] && mkdir "${web_dir}"
-  while [[ ! -f "${web_dir}/web.zip" ]]; do
+  while 1 = 1; do
     green "请选择下面任意一个网站模板:"
     green "1. https://templated.co/intensify(素雅模板)"
     green "2. https://templated.co/binary(人物照片)"
@@ -496,7 +496,7 @@ function change_bbr() {
   wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
   chmod +x tcp.sh
   ./tcp.sh
-    green "bbr切换完成！"
+    green "操作完成！"
     sleep 6
 }
 
