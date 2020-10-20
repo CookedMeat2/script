@@ -39,15 +39,15 @@ elif cat /proc/version | grep -Eqi "centos|red hat|redhat"; then
 fi
 if [ "$release" == "centos" ]; then
     if  [ -n "$(grep ' 6\.' /etc/redhat-release)" ] ;then
-    red "==============="
+    red "====================="
     red "当前系统不受支持"
-    red "==============="
+    red "====================="
     exit
     fi
     if  [ -n "$(grep ' 5\.' /etc/redhat-release)" ] ;then
-    red "==============="
+    red "====================="
     red "当前系统不受支持"
-    red "==============="
+    red "====================="
     exit
     fi
     rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm >/dev/null 2>&1
@@ -55,18 +55,17 @@ if [ "$release" == "centos" ]; then
     yum install -y libtool perl-core zlib-devel gcc pcre* >/dev/null 2>&1
 elif [ "$release" == "ubuntu" ]; then
     if  [ -n "$(grep ' 14\.' /etc/os-release)" ] ;then
-    red "==============="
+    red "====================="
     red "不受支持的系统"
-    red "==============="
+    red "====================="
     exit
     fi
     if  [ -n "$(grep ' 12\.' /etc/os-release)" ] ;then
-    red "==============="
+    red "====================="
     red "不受支持的系统"
-    red "==============="
+    red "====================="
     exit
     fi
-    clear
     green "=============================================="
     green "系统支持检测：支持当前系统"
     green "=============================================="
@@ -91,7 +90,7 @@ if [ -f "/etc/selinux/config" ]; then
         green "=============================================="
         green "检测到SELinux开启状态，添加开放80/443端口规则"
         green "=============================================="
-	      yum install -y policycoreutils-python >/dev/null 2>&1
+        yum install -y policycoreutils-python >/dev/null 2>&1
         semanage port -m -t http_port_t -p tcp 80
         semanage port -m -t http_port_t -p tcp 443
     fi
@@ -149,15 +148,15 @@ function install(){
     real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
     local_addr=`curl ipv4.icanhazip.com`
     if [ $real_addr == $local_addr ] ; then
-  green "=========================================="
-	green "       域名解析正常，开始安装nginx"
-	green "=========================================="
+    green "=============================================="
+	green "         域名解析正常，开始安装nginx"
+    green "=============================================="
         install_nginx
     else
-  red "===================================="
-	red "域名解析地址与本VPS的IP地址不一致"
-	red "若确认解析成功,可强制脚本继续运行"
-	red "===================================="
+    red "========================================"
+	red "  域名解析地址与本VPS的IP地址不一致"
+	red "  若确认解析成功,可强制脚本继续运行"
+	red "======================================="
 	read -p "是否强制运行 ?请输入 [Y/n] :" yn
 	[ -z "${yn}" ] && yn="y"
 	if [[ $yn == [Yy] ]]; then
@@ -182,15 +181,14 @@ function install_nginx(){
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
     green
-    green "=========================================="
-    green "正在编译安装nginx及组件，可能等待时间较长，"
-    green "通常需要5到10分钟，可以去喝口水或小憩一下？"
-    green "=========================================="
+    green "=============================================="
+    green " 正在编译安装nginx及组件，可能等待时间较长，"
+    green " 通常需要5到10分钟，可以去喝口水或小憩一下？"
+    green "=============================================="
     green
     sleep 5
-    make
-    make install
-    clear
+    make >/dev/null 2>&1
+    make install >/dev/null 2>&1
 
 cat > /etc/nginx/conf/nginx.conf <<-EOF
 user  root;
@@ -263,7 +261,7 @@ server {
 # 将解析到此IP的域名、http地址，重定向到对应的https网址上
 server {
     listen          80;
-    server_name      $your_domain *.$short_domain xxxxxxx.com;   #修改为另外一个域名
+    server_name      $your_domain $short_domain xxxxxxx.com;   #修改为另外一个域名
     return 301 https://\$server_name\$request_uri;
     }
 }
@@ -402,6 +400,7 @@ uuid：${v2uuid}
 底层传输：tls
 
 Qv2ray二维码链接：${v2ray_link}
+
 v2rayN二维码链接：${v2ray_link}
 
 nginx配置：/etc/nginx/conf/nginx.conf
@@ -411,7 +410,7 @@ v2ray配置：/usr/local/etc/v2ray/config.json
 EOF
 
 green "==============================="
-green "  安装已经完成，账号信息如下："
+green " 安装已经完成，账号信息如下："
 green "==============================="
 green
 green "地址：${real_addr}"
@@ -428,6 +427,7 @@ green "Qv2ray二维码链接：${v2ray_link}"
 green "V2rayN二维码链接：${v2ray_link}"
 green
 green "Nginx配置：/etc/nginx/conf/nginx.conf"
+green
 green "V2ray配置：/usr/local/etc/v2ray/config.json"
 green
 }
@@ -503,7 +503,7 @@ function web_download () {
       wget -O web.zip --no-check-certificate https://templated.co/intensify/download >/dev/null 2>&1
     ;;
     esac
-    unzip -o -d /etc/nginx/html/web.zip
+    unzip web.zip >/dev/null 2>&1
     green "网站已切换，请在浏览器查看。"
     sleep 5
 }
@@ -604,7 +604,6 @@ function start_menu(){
     check_env
     install
     install_bbr
-    start_menu
     ;;
     2)
     update_v2ray
