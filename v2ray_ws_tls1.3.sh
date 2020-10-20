@@ -124,20 +124,20 @@ fi
 #安装nginx
 function install(){
     $systemPackage install -y wget curl unzip >/dev/null 2>&1
-    green "=========================="
-    yellow "请输入要绑定到本VPS的域名"
-    green "=========================="
+    green "=============================================="
+    yellow "请输入要绑定到本VPS的域名，可以是二级域名"
+    green "=============================================="
     read your_domain
     short_domain=`echo ${your_domain} | awk -F '.' '{print $(NF-1) "." $NF}'`
     real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
     local_addr=`curl ipv4.icanhazip.com`
     if [ $real_addr == $local_addr ] ; then
-  green "=========================================="
+    green "=========================================="
 	green "       域名解析正常，开始安装nginx"
 	green "=========================================="
         install_nginx
     else
-  red "===================================="
+    red "===================================="
 	red "域名解析地址与本VPS的IP地址不一致"
 	red "若确认解析成功,可强制脚本继续运行"
 	red "===================================="
