@@ -387,7 +387,7 @@ v2ray_link="vmess://$(base64 -w 0 /usr/local/etc/v2ray/qr_config.json)"
 rm -f /usr/local/etc/v2ray/qr_config.json
 
 cat > /usr/local/etc/v2ray/myconfig.json<<-EOF
-{
+
 =============账 号 信 息===============
 地址：${real_addr}
 端口：443
@@ -403,10 +403,11 @@ Qv2ray二维码链接：${v2ray_link}
 
 v2rayN二维码链接：${v2ray_link}
 
+* 两种链接相同
+
 nginx配置：/etc/nginx/conf/nginx.conf
 v2ray配置：/usr/local/etc/v2ray/config.json
 
-}
 EOF
 
 green "==============================="
