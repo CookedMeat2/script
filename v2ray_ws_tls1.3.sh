@@ -13,7 +13,7 @@ function yellow(){
 }
 
 function check_os(){
-green "系统支持检测……"
+green "系统支持检测"
 sleep 5
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
@@ -67,7 +67,7 @@ elif [ "$release" == "ubuntu" ]; then
     exit
     fi
     green "=============================================="
-    green "系统支持检测：支持当前系统"
+    green "         系统支持检测：支持当前系统"
     green "=============================================="
     green
     green "安装nginx编译需要的软件"
@@ -82,8 +82,6 @@ fi
 
 function check_env(){
 green
-green "检测nginx安装环境"
-sleep 5
 if [ -f "/etc/selinux/config" ]; then
     CHECK=$(grep SELINUX= /etc/selinux/config | grep -v "#")
     if [ "$CHECK" != "SELINUX=disabled" ]; then
@@ -141,7 +139,7 @@ fi
 
 function install(){
     green "=============================================="
-    yellow "请输入要绑定到本VPS的域名，可以是二级域名"
+    yellow "  请输入要绑定到本VPS的域名，可以是二级域名"
     green "=============================================="
     read your_domain
     short_domain=`echo ${your_domain} | awk -F '.' '{print $(NF-1) "." $NF}'`
@@ -182,11 +180,10 @@ function install_nginx(){
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
     green
     green "=============================================="
-    green " 正在编译安装nginx及组件，可能等待时间较长，"
-    green " 通常需要5到10分钟，可以去喝口水或小憩一下？"
+    green "  正在编译安装nginx及组件，可能等待时间较长，"
+    green "  通常需要5到10分钟，可以去喝口水或听一首歌？"
     green "=============================================="
-    green
-    sleep 5
+    green "……"
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
 
@@ -372,12 +369,12 @@ EOF
     sed -i "s/myuuid/$v2uuid/;" config.json
     sed -i "s/mypath/$newpath/;" config.json
     cd /etc/nginx/html
-    rm -f ./*
-    wget -O /etc/nginx/html/web.zip --no-check-certificate https://templated.co/intensify/download
+    rm -f ./* >/dev/null 2>&1
+    wget -O /etc/nginx/html/web.zip --no-check-certificate https://templated.co/intensify/download >/dev/null 2>&1
     unzip web.zip >/dev/null 2>&1
-    systemctl enable v2ray.service
-    systemctl restart v2ray.service
-    systemctl restart nginx.service
+    systemctl enable v2ray.service >/dev/null 2>&1
+    systemctl restart v2ray.service >/dev/null 2>&1
+    systemctl restart nginx.service>/dev/null 2>&1
 
 cat > /usr/local/etc/v2ray/qr_config.json<<-EOF
 {"add":"${real_addr}","id":"${v2uuid}","net":"ws","host":"${your_domain}","port":"443","ps":"Vmess_${newpath}","tls":"tls","v":2,"aid":64,"path":"/${newpath}","type":"none"}
@@ -411,7 +408,7 @@ v2ray配置：/usr/local/etc/v2ray/config.json
 EOF
 
 green "==============================="
-green " 安装已经完成，账号信息如下："
+green "  安装已经完成，账号信息如下"
 green "==============================="
 green
 green "地址：${real_addr}"
@@ -425,10 +422,12 @@ green "路径：${newpath}"
 green "底层传输：tls"
 green
 green "Qv2ray二维码链接：${v2ray_link}"
+green
 green "V2rayN二维码链接：${v2ray_link}"
 green
-green "Nginx配置：/etc/nginx/conf/nginx.conf"
+green "* 两种链接相同"
 green
+green "Nginx配置：/etc/nginx/conf/nginx.conf"
 green "V2ray配置：/usr/local/etc/v2ray/config.json"
 green
 }
@@ -543,7 +542,7 @@ function install_bbr() {
 		echo "net.core.default_qdisc = fq" >>/etc/sysctl.conf
 		sysctl -p >/dev/null 2>&1
 		echo
-		green "BBR 加速已成功启用"
+		green "BBR 加速已成功启用，更换BBR请选 4"
 		echo
 	else
 		# https://teddysun.com/489.html
@@ -565,10 +564,10 @@ function remove_v2ray_nginx() {
     systemctl stop nginx.service
     systemctl disable nginx.service
 
-    rm -rf /usr/local/bin/v2ray /usr/local/bin/v2ctl
-    rm -rf /usr/local/share/v2ray/ /usr/local/etc/v2ray/
-    rm -rf /etc/systemd/system/v2ray*
-    rm -rf /etc/nginx
+    rm -rf /usr/local/bin/v2ray /usr/local/bin/v2ctl >/dev/null 2>&1
+    rm -rf /usr/local/share/v2ray/ /usr/local/etc/v2ray/ >/dev/null 2>&1
+    rm -rf /etc/systemd/system/v2ray* >/dev/null 2>&1
+    rm -rf /etc/nginx >/dev/null 2>&1
 
     green "卸载完成，系统已还原"
     sleep 5
@@ -580,8 +579,8 @@ function start_menu(){
     green " ========================================================="
     green " 介绍: 一键安装 V2ray+ws+tls+CDN，支持cf自选节点。"
     green " 支持: Centos7/Debian9+/Ubuntu16.04+"
-    green " 时间: 2020-10-19"
     green " 作者: CookedMeat2"
+    green " 时间: 2020-10-19"
     green " ========================================================="
     echo
     green "  1. 安装 V2ray+ws+tls"
@@ -620,29 +619,25 @@ function start_menu(){
     ;;
     5)
     vim /usr/local/etc/v2ray/config.json
-    green "5秒后返回"
-    sleep 5
-    start_menu
+    systemctl restart v2ray.service
     ;;
     6)
     vim /etc/nginx/conf/nginx.conf
-    green "5秒后返回"
-    sleep 5
-    start_menu
+    systemctl restart nginx.service
     ;;
     7)
     cat /usr/local/etc/v2ray/myconfig.json
     ;;
     8)
-    systemctl restart v2ray.service >/dev/null 2>&1
-    systemctl restart nginx.service >/dev/null 2>&1
+    systemctl restart v2ray.service
+    systemctl restart nginx.service
     green "v2ray+nginx服务已重启！"
     sleep 5
     start_menu
     ;;
     9)
-    systemctl stop v2ray.service >/dev/null 2>&1
-    systemctl stop nginx.service >/dev/null 2>&1
+    systemctl stop v2ray.service
+    systemctl stop nginx.service
     green "v2ray+nginx服务已停止！"
     sleep 5
     start_menu
