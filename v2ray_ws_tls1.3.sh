@@ -67,7 +67,7 @@ elif [ "$release" == "ubuntu" ]; then
     exit
     fi
     green "支持的系统"
-    ufw_status=`systemctl status ufw | grep "Active: active"` >/dev/null 2>&1
+    ufw_status=`systemctl status ufw | grep "Active: active"` &>/dev/null 2>&1
     if [ -n "$ufw_status" ]; then
         ufw allow 80/tcp >/dev/null 2>&1
         ufw allow 443/tcp >/dev/null 2>&1
@@ -94,7 +94,7 @@ if [ -f "/etc/selinux/config" ]; then
         semanage port -m -t http_port_t -p tcp 443
     fi
 fi
-firewall_status=`firewall-cmd --state` >/dev/null 2>&1
+firewall_status=`firewall-cmd --state` &>/dev/null 2>&1
 if [ "$firewall_status" == "running" ]; then
     green "检测到firewalld开启状态，添加放行80/443端口规则"
     firewall-cmd --zone=public --add-port=80/tcp --permanent >/dev/null 2>&1
