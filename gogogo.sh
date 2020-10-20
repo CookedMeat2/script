@@ -588,12 +588,12 @@ function start_menu(){
     clear
     green
     green "========================================================="
-    green " 介绍: 一键安装 Nginx+V2ray+ws+TLS1.3，可自选CF的CDN节点"
+    green " 介绍: 一键安装 Nginx+V2ray+WS+TLS1.3，可自选CF的CDN节点"
     green " 支持: Centos7/Debian9+/Ubuntu16.04+"
     green " 作者: CookedMeat2"
     green " 时间: 2020-10-19"
     green "========================================================="
-    green "  1. 安装 Nginx+V2ray+ws+TLS1.3"
+    green "  1. 安装 Nginx+V2ray+WS+TLS1.3"
     green
     green "  2. 更新 V2ray主程序"
     green
