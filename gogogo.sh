@@ -406,15 +406,16 @@ Qv2ray二维码链接：${v2ray_link}
 
 v2rayN二维码链接：${v2ray_link}
 
-* 两种链接相同
+* 以上两种链接相同
 
 nginx配置：/etc/nginx/conf/nginx.conf
 v2ray配置：/usr/local/etc/v2ray/config.json
+伪装网站：https://$your_domain (可更换模板)
 
 EOF
 
 green "==============================="
-green "  安装已经完成，账号信息如下"
+green " 安装已经完成，账号信息如下："
 green "==============================="
 green
 green "地址：${real_addr}"
@@ -431,10 +432,11 @@ green "Qv2ray二维码链接：${v2ray_link}"
 green
 green "V2rayN二维码链接：${v2ray_link}"
 green
-green "* 两种链接相同"
+green "* 以上两种链接相同"
 green
 green "Nginx配置：/etc/nginx/conf/nginx.conf"
 green "V2ray配置：/usr/local/etc/v2ray/config.json"
+green "伪装网站：https://$your_domain (可更换模板)"
 green
 }
 
@@ -510,7 +512,7 @@ function web_download () {
     ;;
     esac
     unzip web.zip >/dev/null 2>&1
-    green "伪装网站已切换，请输入域名查看。"
+    green "伪装网站已切换，请打开https://$your_domain查看。"
     sleep 5
 }
 
