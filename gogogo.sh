@@ -376,7 +376,7 @@ EOF
     sed -i "s/mypath/$newpath/;" config.json
     cd /etc/nginx/html
     rm -f ./* >/dev/null 2>&1
-    wget -O /etc/nginx/html/web.zip --no-check-certificate https://templated.co/intensify/download >/dev/null 2>&1
+    wget -O /etc/nginx/html/web.zip --no-check-certificate https://templated.co/phaseshift/download >/dev/null 2>&1
     unzip web.zip >/dev/null 2>&1
     systemctl enable v2ray.service >/dev/null 2>&1
     systemctl restart v2ray.service >/dev/null 2>&1
