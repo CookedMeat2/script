@@ -14,7 +14,7 @@ function yellow(){
 
 function check_os(){
 green "系统支持检测"
-sleep 4
+sleep 6
 if [[ -f /etc/redhat-release ]]; then
     release="centos"
     systemPackage="yum"
@@ -84,7 +84,7 @@ fi
 
 function check_env(){
 green "安装环境监测"
-sleep 4
+sleep 6
 if [ -f "/etc/selinux/config" ]; then
     CHECK=$(grep SELINUX= /etc/selinux/config | grep -v "#")
     if [ "$CHECK" != "SELINUX=disabled" ]; then
@@ -107,14 +107,14 @@ Port443=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 443`
 if [ -n "$Port80" ]; then
     process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
     red "==================================================================="
-    red "检测到80端口被占用，占用进程为：${process80}，请先卸载相关服务"
+    red "检测到80端口被占用，占用进程为：${process80}，请先结束相关服务和进程"
     red "==================================================================="
     exit 1
 fi
 if [ -n "$Port443" ]; then
     process443=`netstat -tlpn | awk -F '[: ]+' '$5=="443"{print $9}'`
     red "====================================================================="
-    red "检测到443端口被占用，占用进程为：${process443}，请先卸载相关服务"
+    red "检测到443端口被占用，占用进程为：${process443}，请先结束相关服务和进程"
     red "====================================================================="
     exit 1
 fi
@@ -138,7 +138,7 @@ function install(){
         install_nginx
     else
   red "===================================="
-	red "域名解析地址与本VPS IP地址不一致"
+	red "域名解析地址与本VPS的IP地址不一致"
 	red "若确认解析成功,可强制脚本继续运行"
 	red "===================================="
 	read -p "是否强制运行 ?请输入 [Y/n] :" yn
@@ -164,8 +164,9 @@ function install_nginx(){
     tar xf nginx-1.15.8.tar.gz && rm nginx-1.15.8.tar.gz >/dev/null 2>&1
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module  >/dev/null 2>&1
-    green "开始编译安装nginx及组件，等待时间较长，通常要5到10分钟，先去喝口水吧。"
-    sleep 4
+    green "开始编译安装nginx及组件，等待可能时间较长，"
+    green "通常需要5到10分钟，先去喝口水或小憩一下？"
+    sleep 6
     make >/dev/null 2>&1
     make install >/dev/null 2>&1
 
@@ -302,7 +303,6 @@ function install_v2ray(){
     bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     cd /usr/local/etc/v2ray/
     rm -f config.json
-    ln -s /etc/nginx/sbin/vm /usr/local/bin/v2ray
 cat > /usr/local/etc/v2ray/config.json<<-EOF
 {
   "log" : {
@@ -487,8 +487,8 @@ web_dir="/etc/nginx/html"
     esac
   done
   unzip -o -d ${web_dir} ${web_dir}/web.zip
-    green "网站已切换，请在浏览器查看 https://$short_domain"
-    sleep 4
+    green "网站已切换，请在浏览器查看"
+    sleep 6
 }
 
 
@@ -497,7 +497,7 @@ function change_bbr() {
   chmod +x tcp.sh
   ./tcp.sh
     green "bbr切换完成！"
-    sleep 4
+    sleep 6
 }
 
 function install_bbr() {
@@ -537,7 +537,7 @@ function update_v2ray() {
     bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     systemctl restart v2ray
     green "v2ray更新完成"
-    sleep 4
+    sleep 6
 }
 
 
@@ -553,9 +553,8 @@ function remove_v2ray_nginx() {
     rm -rf /etc/systemd/system/v2ray*
     rm -rf /etc/nginx
 
-    green "nginx、v2ray卸载完成！"
-    green "系统已还原到初始状态！"
-    sleep 4
+    green "卸载完成，系统已还原！"
+    sleep 6
 
 }
 
@@ -598,17 +597,17 @@ function start_menu(){
     start_menu
     ;;
     5)
-    systemctl restart v2ray.service
-    systemctl restart nginx.service
+    systemctl restart v2ray.service >/dev/null 2>&1
+    systemctl restart nginx.service >/dev/null 2>&1
     green "服务重启完成！"
-    sleep 4
+    sleep 6
     start_menu
     ;;
     6)
-    systemctl stop v2ray.service
-    systemctl stop nginx.service
+    systemctl stop v2ray.service >/dev/null 2>&1
+    systemctl stop nginx.service >/dev/null 2>&1
     green "服务停止完成！"
-    sleep 4
+    sleep 6
     start_menu
     ;;
     7)
@@ -621,7 +620,7 @@ function start_menu(){
     *)
     clear
     red "请输入正确的数字！"
-    sleep 4
+    sleep 6
     start_menu
     ;;
     esac
