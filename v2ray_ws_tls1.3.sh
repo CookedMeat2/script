@@ -592,21 +592,28 @@ function start_menu(){
     green " 作者: CookedMeat2"
     green " 时间: 2020-10-19"
     green " ========================================================="
-    echo
     green "  1. 安装 V2ray+ws+tls"
+    green
     green "  2. 更新 V2ray主程序"
+    green
     green "  3. 更换 伪装网站"
+    green
     green "  4. 更换 BBR加速"
     green " --------------------------------------------------------"
     green "  5. 编辑 V2ray配置"
+    green
     green "  6. 编辑 Nginx配置"
+    green
     green "  7. 查看 账号信息"
     green " --------------------------------------------------------"
     green "  8. 重启 V2ray+Nginx"
+    green
     green "  9. 停止 V2ray+Nginx"
+    green
     green " 10. 卸载 V2ray+Nginx"
+    green
     green " 11. 退出脚本"
-    echo
+    green
     read -p "请输入一个数字后回车:" num
     case "$num" in
     1)
