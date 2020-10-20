@@ -402,9 +402,9 @@ uuid：${v2uuid}
 路径：${newpath}
 底层传输：tls
 
-Qv2ray二维码链接：${v2ray_link}
+Qv2ray分享链接：${v2ray_link}
 
-v2rayN二维码链接：${v2ray_link}
+v2rayN分享链接：${v2ray_link}
 
 * 以上两种链接相同
 
@@ -428,9 +428,9 @@ green "别名：Vmess_${newpath}"
 green "路径：${newpath}"
 green "底层传输：tls"
 green
-green "Qv2ray二维码链接：${v2ray_link}"
+green "Qv2ray分享链接：${v2ray_link}"
 green
-green "V2rayN二维码链接：${v2ray_link}"
+green "V2rayN分享链接：${v2ray_link}"
 green
 green "* 以上两种链接相同"
 green
