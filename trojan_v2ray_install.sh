@@ -1013,7 +1013,7 @@ function installTrojanServer(){
         else
             exit
         fi
-        green " 已经卸载完毕，开始重新安装Trojan${promptInfoTrojanName} ! "
+        yellow " 已经卸载完毕，开始重新安装Trojan${promptInfoTrojanName} ! "
     fi
 
 
@@ -1620,7 +1620,7 @@ function installV2ray(){
         else
             exit
         fi
-        green " 已经卸载完毕，开始重新安装V2ray! "
+        yellow " 已经卸载完毕，开始重新安装V2ray! "
     fi
 
     getTrojanAndV2rayVersion "v2ray"
