@@ -231,7 +231,7 @@ function setLinuxRootLogin(){
     if [ "$osRelease" == "centos" ] ; then
 
         sudo sed -i 's/ClientAliveInterval 420/ClientAliveInterval 120/g' /etc/ssh/sshd_config
-        
+
         sudo service sshd restart
         sudo systemctl restart sshd
 
@@ -241,7 +241,7 @@ function setLinuxRootLogin(){
     if [ "$osRelease" == "ubuntu" ] || [ "$osRelease" == "debian" ] ; then
 
         sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 120/g' /etc/ssh/sshd_config
-        
+
         sudo service ssh restart
         sudo systemctl restart ssh
 
@@ -283,7 +283,7 @@ function setLinuxDateZone(){
 
     if [[ ${tempCurrentDateZone} == "+0800" ]]; then
         yellow "当前时区已经为北京时间  $tempCurrentDateZone | $(date -R) "
-    else 
+    else
         green " =================================================="
         yellow "当前时区为: $tempCurrentDateZone | $(date -R) "
         yellow "是否设置时区为北京时间 +0800区, 以便cron定时重启脚本按照北京时间运行."
@@ -663,9 +663,9 @@ function installWebServerNginx(){
         red "     Nginx 已安装过, 请选择是否彻底卸载之前安装的Nginx!"
         red "     为腾出80和443端口，如果有安装caddy，也会一并卸载!!"
         green " ================================================== "
-        read -p "请输入[Y/n]?"  UninstallNgingInput
-        UninstallNgingInput=${ UninstallNgingInput:-Y}
-        if [[ $ UninstallNgingInput == [Yy] ]]; then
+        read -p "请输入[Y/n]?"  uninstallNgingInput
+        uninstallNgingInput=${uninstallNgingInput:-Y}
+        if [[ ${uninstallNgingInput} == [Yy] ]]; then
             removeNginx
         else
             exit
@@ -847,17 +847,17 @@ EOF
 
 
     # 下载伪装站点 并设置伪装网站
-    rm -rf ${configWebsitePath}/*    
+    rm -rf ${configWebsitePath}/*
     cd ${configWebsitePath}/
     apt install git
     git clone https://github.com/tatygrassini/landio-html.git
     cd ./landio-html
     mv * ../
-    
+
     mkdir -p ${configWebsiteDownloadPath}
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/trojan_client_all.zip" "${configWebsiteDownloadPath}" "trojan_client_all.zip"
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/trojan-qt5.zip" "${configWebsiteDownloadPath}" "trojan-qt5.zip"
-    
+
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/v2ray_client_all.zip" "${configWebsiteDownloadPath}" "v2ray_client_all.zip"
     wget -P "${configWebsiteDownloadPath}" "https://github.com/jinwyp/one_click_script/raw/master/download/v2ray-android.zip"
 
@@ -909,7 +909,7 @@ function removeNginx(){
     rm -f ${nginxErrorLogFilePath}
 
     rm -rf "/etc/nginx"
-    
+
     rm -rf /etc/caddy
     rm -f /etc/caddy/Caddyfile
 
@@ -921,8 +921,7 @@ function removeNginx(){
     green " ================================================== "
 }
 
-
-function installTrojanWholeProcess(){
+ function installTrojanWholeProcess(){
 
     stopServiceNginx
     testLinuxPortUsage
@@ -964,7 +963,7 @@ function installTrojanWholeProcess(){
             red "==================================="
             red " https证书没有申请成功，安装失败!"
             red " 请检查域名和DNS是否生效, 同一域名请不要一天内多次申请!"
-            red " 请检查80和443端口是否开启, VPS服务商可能需要添加额外防火墙规则，例如阿里云、谷歌云等!"
+            red " 请检查nginx是否安装成功，80和443端口是否开启, VPS服务商可能需要添加额外防火墙规则!"
             red " 重启VPS, 重新执行脚本, 可重新选择修复证书选项再次申请证书 ! "
             red " 可参考 https://www.v2rayssr.com/trojan-2.html "
             red "==================================="
@@ -997,9 +996,9 @@ function installTrojanServer(){
         green " =================================================="
         green "  已安装过 Trojan${promptInfoTrojanName} , 请选择是否彻底卸载之前安装的 Trojan${promptInfoTrojanName} !"
         green " =================================================="
-        read -p "请输入[Y/n]?"  UninstallTrojanInput
-        UninstallTrojanInput=${ UninstallTrojanInput:-Y}
-        if [[ $ UninstallTrojanInput == [Yy] ]]; then
+        read -p "请输入[Y/n]?"  uninstallTrojanInput
+        uninstallTrojanInput=${uninstallTrojanInput:-Y}
+        if [[ ${uninstallTrojanInput} == [Yy] ]]; then
             removeTrojan
         else
             exit
@@ -1181,7 +1180,7 @@ function installTrojanServer(){
 }
 EOF
 
-        rm /etc/systemd/system/trojan.service   
+        rm /etc/systemd/system/trojan.service
         # 增加启动脚本
         cat > ${osSystemMdPath}trojan.service <<-EOF
 [Unit]
@@ -1601,9 +1600,9 @@ function installV2ray(){
         green " =================================================="
         green "  已安装过 V2ray, 请选择是否彻底卸载之前安装的V2ray!"
         green " =================================================="
-        read -p "请输入[Y/n]?"  Uninstallv2rayInput
-        Uninstallv2rayInput=${ Uninstallv2rayInput:-Y}
-        if [[ $ Uninstallv2rayInput == [Yy] ]]; then
+        read -p "请输入[Y/n]?"  uninstallV2rayInput
+        uninstallV2rayInput=${uninstallV2rayInput:-Y}
+        if [[ ${uninstallV2rayInput} == [Yy] ]]; then
             removev2ray
         else
             exit
@@ -1620,7 +1619,7 @@ function installV2ray(){
 
     if [[ -n "$configV2rayVlessMode" ]]; then
          configV2rayProtocol="vless"
-    else 
+    else
 
         read -p "是否使用VLESS协议，使用VLESS输入Y,使用VMess输入n，请输入：[Y/n]?" isV2rayUseVLessInput
         isV2rayUseVLessInput=${isV2rayUseVLessInput:-Y}
@@ -1817,7 +1816,7 @@ function installV2ray(){
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "/${configV2rayWebSocketPath}" 
+                    "path": "/${configV2rayWebSocketPath}"
                 }
             }
         }
@@ -1995,7 +1994,7 @@ EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "/${configV2rayWebSocketPath}" 
+                    "path": "/${configV2rayWebSocketPath}"
                 }
             }
         }
@@ -2113,7 +2112,7 @@ EOF
 
 
 
-    
+
     # 增加启动脚本
     cat > ${osSystemMdPath}v2ray.service <<-EOF
 [Unit]
@@ -2182,7 +2181,7 @@ EOF
     if [[ ${isInstallNginx} == "true" ]]; then
         green "    伪装站点为 https://${configSSLDomain}!"
     fi
-	
+
 	red "    V2ray 服务器端配置路径 ${configV2rayPath}/config.json !"
 	red "    V2ray 访问日志 ${configV2rayAccessLogFilePath} !"
 	red "    V2ray 错误日志 ${configV2rayErrorLogFilePath} !"
@@ -2227,7 +2226,7 @@ function removeV2ray(){
 
     sudo systemctl stop v2ray.service
     sudo systemctl disable v2ray.service
-        rm -rf /etc/systemd/system/v2ray*
+    rm -rf /etc/systemd/system/v2ray*
     rm -rf ${configV2rayPath}
     rm -f ${osSystemMdPath}v2ray.service
     rm -f ${configV2rayAccessLogFilePath}
@@ -2564,16 +2563,16 @@ function startMenuOther(){
     green " 11. 单独申请域名SSL证书"
     green " 12. 只安装trojan 运行在443端口, 不安装nginx, 请确保443端口没有被nginx占用"
     green " 13. 只安装trojan-go 运行在443端口, 不支持CDN, 不开启websocket, 不安装nginx. 请确保80端口有监听,否则trojan-go无法启动"
-    green " 14. 只安装trojan-go 运行在443端口, 支持CDN, 开启websocket, 不安装nginx. 请确保80端口有监听,否则trojan-go无法启动"    
+    green " 14. 只安装trojan-go 运行在443端口, 支持CDN, 开启websocket, 不安装nginx. 请确保80端口有监听,否则trojan-go无法启动"
     green " 15. 只安装v2ray (VLess 或 VMess协议) 开启websocket, 支持CDN, 不安装nginx, 方便与现有网站或宝塔面板共存"
     green " 16. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-TLS) + (VLess-WS) 支持CDN, 不安装nginx"
-    green " 17. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-XTLS) + (VLess-WS) + trojan 支持VLess的CDN, 不安装nginx"    
-    green " 18. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-XTLS) + (VLess-WS) + trojan-go 支持VLess的CDN, 不安装nginx"   
-    green " 19. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-XTLS) + (VLess-WS) + trojan-go 支持VLess的CDN和trojan-go的CDN, 不安装nginx"   
+    green " 17. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-XTLS) + (VLess-WS) + trojan 支持VLess的CDN, 不安装nginx"
+    green " 18. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-XTLS) + (VLess-WS) + trojan-go 支持VLess的CDN, 不安装nginx"
+    green " 19. 只安装v2ray VLess作为最前端运行在443端口 (VLess-TCP-XTLS) + (VLess-WS) + trojan-go 支持VLess的CDN和trojan-go的CDN, 不安装nginx"
 
-    red " 27. 卸载 trojan"    
-    red " 28. 卸载 trojan-go"   
-    red " 29. 卸载 v2ray"   
+    red " 27. 卸载 trojan"
+    red " 28. 卸载 trojan-go"
+    red " 29. 卸载 v2ray"
 
     green " =================================================="
     echo
@@ -2631,14 +2630,14 @@ function startMenuOther(){
             isTrojanGo="yes"
             isTrojanGoSupportWebsocket="true"
             getHTTPSV2rayUI "trojan"
-        ;;          
+        ;;
         15 )
             getHTTPSV2rayUI "v2ray"
-        ;;     
+        ;;
         16 )
             configV2rayVlessMode="ws"
             getHTTPSV2rayUI "v2ray"
-        ;;       
+        ;;
         17 )
             configV2rayVlessMode="trojan"
             getHTTPSV2rayUI "v2ray"
@@ -2647,23 +2646,23 @@ function startMenuOther(){
             configV2rayVlessMode="trojan"
             isTrojanGo="yes"
             getHTTPSV2rayUI "v2ray"
-        ;;    
+        ;;
         19 )
             configV2rayVlessMode="trojan"
             isTrojanGo="yes"
             isTrojanGoSupportWebsocket="true"
             getHTTPSV2rayUI "v2ray"
-        ;;     
+        ;;
         27 )
             removeTrojan
-        ;;    
+        ;;
         28 )
             isTrojanGo="yes"
             removeTrojan
         ;;
         29 )
             removeV2ray
-        ;;                                                   
+        ;;
         31 )
             vps_superspeed
         ;;
@@ -2710,7 +2709,7 @@ function start_menu(){
     red " *请不要在任何生产环境使用此脚本 请不要有其他程序占用80和443端口"
     red " *若是已安装trojan 或第二次使用脚本，请先执行卸载trojan"
     green " =================================================="
-    green " 1. 安装 BBR-PLUS 加速4合一脚本"
+    green " 1. 安装 BBR-PLUS 加速四合一脚本"
     echo
     green " 2. 安装 trojan 和 nginx 不支持CDN"
     green " 3. 修复证书 并继续安装 trojan"
@@ -2866,7 +2865,7 @@ function start_menu(){
         ;;
         30 )
             startMenuOther
-        ;;        
+        ;;
         41 )
             startMenuOther
         ;;
@@ -2894,4 +2893,3 @@ function start_menu(){
 
 
 start_menu "first"
-
