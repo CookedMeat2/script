@@ -854,7 +854,7 @@ EOF
     git clone https://github.com/tatygrassini/landio-html.git
     cd ./landio-html
     mv * ../
-read
+
     mkdir -p ${configWebsiteDownloadPath}
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/trojan_client_all.zip" "${configWebsiteDownloadPath}" "trojan_client_all.zip"
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/trojan-qt5.zip" "${configWebsiteDownloadPath}" "trojan-qt5.zip"
