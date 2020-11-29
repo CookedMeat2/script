@@ -2292,9 +2292,9 @@ function installTrojanWeb(){
         green " ======================================================================"
         red "  已安装过 Trojan-web 可视化管理面板, 请选择是否彻底卸载之前安装的 !"
         green " ======================================================================"
-        read -p "请输入[Y/n]?"  uninstallTrojan-webInput
-        uninstallTrojan-webInput=${uninstallTrojan-webInput:-Y}
-        if [[ ${uninstallTrojan-webInput} == [Yy] ]]; then
+        read -p "请输入[Y/n]?"  uninstallTrojanwebInput
+        uninstallTrojanwebInput=${uninstallTrojanwebInput:-Y}
+        if [[ ${uninstallTrojanwebInput} == [Yy] ]]; then
             removeNginx
             removeTrojanWeb
         else
