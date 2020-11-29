@@ -847,7 +847,7 @@ EOF
 
 
     # 下载伪装站点 并设置伪装网站
-    rm -rf ${configWebsitePath}/*
+    rm -f ${configWebsitePath}/*
     cd ${configWebsitePath}/
     apt install git
     git clone https://github.com/tatygrassini/landio-html.git
