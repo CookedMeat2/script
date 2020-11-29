@@ -670,7 +670,7 @@ function installWebServerNginx(){
         else
             exit
         fi
-        green " 已经卸载完毕，开始重新安装Nginx! "
+        yellow " 已经卸载完毕，开始重新安装Nginx! "
     fi
 
     stopServiceV2ray
@@ -865,23 +865,32 @@ EOF
     sudo systemctl start nginx.service
 
     green " ================================================== "
-    green "       Web服务器 nginx 安装成功!!"
+    green "    Web服务器 nginx 安装成功!!"
     green "    伪装站点为 http://${configSSLDomain}"
+    green "    "
 
 	if [[ $1 == "trojan-web" ]] ; then
 	    yellow "    Trojan-web ${versionTrojanWeb} 可视化管理面板地址  http://${configSSLDomain}/${configTrojanWebNginxPath} "
 	    green "    Trojan-web 可视化管理面板 可执行文件路径 ${configTrojanWebPath}/trojan-web"
 	    green "    Trojan 服务器端可执行文件路径 /usr/bin/trojan/trojan"
 	    green "    Trojan 服务器端配置路径 /usr/local/etc/trojan/config.json "
-	    green "    Trojan-web 停止命令: systemctl stop trojan-web.service  启动命令: systemctl start trojan-web.service  重启命令: systemctl restart trojan-web.service"
-	    green "    Trojan 停止命令: systemctl stop trojan.service  启动命令: systemctl start trojan.service  重启命令: systemctl restart trojan.service"
+	    green "    Trojan-web 停止命令: systemctl stop trojan-web.service"
+	    green "    Trojan-web 启动命令: systemctl start trojan-web.service"
+	    green "    Trojan-web 重启命令: systemctl restart trojan-web.service"
+	    green "    "
+	    green "    Trojan 停止命令: systemctl stop trojan.service"
+	    green "    Trojan 启动命令: systemctl start trojan.service"
+	    green "    Trojan 重启命令: systemctl restart trojan.service"
 	fi
 
     green "    伪装站点的静态html内容放置在目录 ${configWebsitePath}, 可自行更换网站内容!"
 	green "    nginx 配置路径 ${nginxConfigPath} "
 	green "    nginx 访问日志 ${nginxAccessLogFilePath} "
 	green "    nginx 错误日志 ${nginxErrorLogFilePath} "
-	green "    nginx 停止命令: systemctl stop nginx.service  启动命令: systemctl start nginx.service  重启命令: systemctl restart nginx.service"
+	green "    "
+	green "    nginx 停止命令: systemctl stop nginx.service"
+	green "    nginx 启动命令: systemctl start nginx.service"
+	green "    nginx 重启命令: systemctl restart nginx.service"
     green " ================================================== "
 }
 
@@ -1010,7 +1019,7 @@ function installTrojanServer(){
 
     green " =================================================="
     green " 开始安装 Trojan${promptInfoTrojanName} Version: ${configTrojanBaseVersion} !"
-    yellow " 请输入trojan密码的前缀? (会生成若干随机密码和带有该前缀的密码)"
+    yellow " 请输入trojan密码前缀? (会生成若干随机密码和带有该前缀的密码,不需要请直接回车)"
     green " =================================================="
 
     read configTrojanPasswordPrefixInput
@@ -1462,7 +1471,10 @@ EOF
 
 	red "    Trojan 服务器端配置路径 ${configTrojanBasePath}/server.json "
 	red "    Trojan 访问日志 ${configTrojanLogFile} 或运行 journalctl -u trojan${promptInfoTrojanName}.service 查看 !"
-	green "    Trojan 停止命令: systemctl stop trojan${promptInfoTrojanName}.service  启动命令: systemctl start trojan${promptInfoTrojanName}.service  重启命令: systemctl restart trojan${promptInfoTrojanName}.service"
+    green "     "
+	green "    Trojan 停止命令: systemctl stop trojan${promptInfoTrojanName}.service"
+	green "    Trojan 启动命令: systemctl start trojan${promptInfoTrojanName}.service"
+	green "    Trojan 重启命令: systemctl restart trojan${promptInfoTrojanName}.service"
 	green "    Trojan 服务器 每天会自动重启,防止内存泄漏. 运行 crontab -l 命令 查看定时重启命令 !"
 	green "======================================================================"
 	blue  "----------------------------------------"
@@ -2186,8 +2198,10 @@ EOF
 	red "    V2ray 服务器端配置路径 ${configV2rayPath}/config.json !"
 	red "    V2ray 访问日志 ${configV2rayAccessLogFilePath} !"
 	red "    V2ray 错误日志 ${configV2rayErrorLogFilePath} !"
-	green "    V2ray 停止命令: systemctl stop v2ray.service  启动命令: systemctl start v2ray.service  重启命令: systemctl restart v2ray.service"
-	# green "    caddy 停止命令: systemctl stop caddy.service  启动命令: systemctl start caddy.service  重启命令: systemctl restart caddy.service"
+	green "    V2ray 停止命令: systemctl stop v2ray.service"
+	green "    V2ray 启动命令: systemctl start v2ray.service"
+	green "    V2ray 重启命令: systemctl restart v2ray.service"
+
 	green "    V2ray 服务器 每天会自动重启,防止内存泄漏. 运行 crontab -l 命令 查看定时重启命令 !"
 	green "======================================================================"
 	blue  "----------------------------------------"
