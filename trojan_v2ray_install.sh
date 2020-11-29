@@ -2745,6 +2745,7 @@ function start_menu(){
     green " 15. 同时安装 trojan + v2ray 和 nginx, 不支持CDN"
     green " 16. 升级 v2ray 和 trojan 到最新版本"
     red " 17. 卸载 trojan, v2ray 和 nginx"
+    echo
     green " 18. 同时安装 trojan-go + v2ray 和 nginx, 不支持CDN"
     green " 19. 同时安装 trojan-go + v2ray 和 nginx, trojan-go 和 v2ray 都支持CDN"
     green " 20. 升级 v2ray 和 trojan-go 到最新版本"
