@@ -846,14 +846,15 @@ EOF
 
 
 
-    # 下载伪装站点 并设置伪装网站
-    rm -f ${configWebsitePath}/*
+    green "       下载伪装站点 并设置伪装网站"
+    rm -rf ${configWebsitePath}
+    mkdir -p ${configWebsitePath}
     cd ${configWebsitePath}/
-    apt install git
+    ${osSystemPackage} -y install git
     git clone https://github.com/tatygrassini/landio-html.git
     cd ./landio-html
     mv * ../
-
+read
     mkdir -p ${configWebsiteDownloadPath}
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/trojan_client_all.zip" "${configWebsiteDownloadPath}" "trojan_client_all.zip"
     downloadAndUnzip "https://github.com/jinwyp/one_click_script/raw/master/download/trojan-qt5.zip" "${configWebsiteDownloadPath}" "trojan-qt5.zip"
@@ -994,7 +995,7 @@ function installTrojanServer(){
 
     if [[ -f "${configTrojanBasePath}/trojan${promptInfoTrojanName}" ]]; then
         green " =================================================="
-        green "  已安装过 Trojan${promptInfoTrojanName} , 请选择是否彻底卸载之前安装的 Trojan${promptInfoTrojanName} !"
+        red "  已安装过 Trojan${promptInfoTrojanName} , 请选择是否彻底卸载之前安装的 Trojan${promptInfoTrojanName} !"
         green " =================================================="
         read -p "请输入[Y/n]?"  uninstallTrojanInput
         uninstallTrojanInput=${uninstallTrojanInput:-Y}
@@ -1598,7 +1599,7 @@ function installV2ray(){
 
     if [ -f "${configV2rayPath}/v2ray" ] || [ -f "/usr/local/bin/v2ray" ] || [ -f "/usr/bin/v2ray" ]|| [ -f "/etc/systemd/system/v2ray*" ]; then
         green " =================================================="
-        green "  已安装过 V2ray, 请选择是否彻底卸载之前安装的V2ray!"
+        red "  已安装过 V2ray, 请选择是否彻底卸载之前安装的V2ray!"
         green " =================================================="
         read -p "请输入[Y/n]?"  uninstallV2rayInput
         uninstallV2rayInput=${uninstallV2rayInput:-Y}
@@ -2275,7 +2276,7 @@ function installTrojanWeb(){
 
     if [ -f "${configTrojanWebPath}/trojan-web" ] ; then
         green " =================================================="
-        green "  已安装过 Trojan-web 可视化管理面板, 退出安装 !"
+        red "  已安装过 Trojan-web 可视化管理面板, 退出安装 !"
         green " =================================================="
         exit
     fi
